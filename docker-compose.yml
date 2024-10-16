@@ -1,0 +1,32 @@
+services:
+  client_manager:
+    build: ./
+    container_name: client_manager
+    restart: always
+    depends_on:
+      client_db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://client_db:5432/client_db
+      - SPRING_DATASOURCE_USERNAME=test
+      - SPRING_DATASOURCE_PASSWORD=test
+
+
+  client_db:
+    container_name: client_db
+    image: postgres
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    environment:
+      POSTGRES_DB: client_db
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
