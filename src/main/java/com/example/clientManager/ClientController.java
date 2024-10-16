@@ -50,6 +50,7 @@ public class ClientController {
     }
 
     @GetMapping("/client/{id}/phone-email")
+    @Operation(summary = "Получение email или phone пользователя")
     public ResponseEntity<List<String>> getPhoneOrEmail(@PathVariable UUID id, @RequestParam String type) {
         return clientService.getPhoneOrEmail(id, type);
     }
